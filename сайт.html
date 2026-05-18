@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arena Breakout</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #111;
+            color: white;
+        }
+
+        .hero {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .bg-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: -1;
+        }
+
+        .hero-content h1 {
+            font-size: 80px;
+            color: #ff9800;
+            text-shadow: 4px 4px 15px black;
+        }
+
+        .hero-content p {
+            font-size: 28px;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+
+        nav {
+            background: #1b1b1b;
+            padding: 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: #ff9800;
+        }
+
+        section {
+            padding: 60px 10%;
+        }
+
+        .about {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .about img {
+            width: 450px;
+            border-radius: 15px;
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .card {
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 15px;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            background: #292929;
+        }
+
+        .card h3 {
+            color: #ff9800;
+            margin-bottom: 15px;
+        }
+
+        footer {
+            background: #000;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 25px;
+            border: none;
+            background: #ff9800;
+            color: white;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #ffb84d;
+        }
+
+        .maps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .map-box {
+            background: #1e1e1e;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+
+        .map-box:hover {
+            transform: translateY(-5px);
+        }
+
+        .map-box img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .accordion {
+            width: 100%;
+            background: #ff9800;
+            color: white;
+            padding: 15px;
+            font-size: 22px;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .accordion:hover {
+            background: #ffb84d;
+        }
+
+        .panel {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            background: #292929;
+            padding: 0 15px;
+        }
+
+        .panel p {
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+
+        .panel img {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const accordions = document.querySelectorAll(".accordion");
+
+        accordions.forEach(button => {
+
+            button.addEventListener("click", function () {
+
+                const panel = this.nextElementSibling;
+
+                if (panel.style.maxHeight) {
+                    panel.style.maxHeight = null;
+                    panel.style.padding = "0 15px";
+                } else {
+                    panel.style.maxHeight = panel.scrollHeight + "px";
+                    panel.style.padding = "15px";
+                }
+
+            });
+
+        });
+
+    });
+</script>
+
+<body>
+
+    <!-- ЗАМІНИ СВІЙ HEADER НА ЦЕЙ -->
+
+    <header class="hero">
+
+        <video autoplay muted loop playsinline class="bg-video">
+            <source src="video/video_2026-05-19_00-43-05.mp4" type="video/mp4">
+        </video>
+
+        <div class="overlay"></div>
+
+        <div class="hero-content">
+            <h1>Arena Breakout</h1>
+            <p>Тактичний шутер нового покоління</p>
+
+            <button onclick="showMessage()">Грати зараз</button>
+        </div>
+
+    </header>
+
+    <nav>
+        <a href="#about">Про гру</a>
+        <a href="#features">Особливості</a>
+        <a href="#contact">Контакти</a>
+    </nav>
+
+    <section id="about">
+        <div class="about">
+            <img src="maps/arena.jpg" alt="Arena Breakout">
+
+            <div class="about-text">
+                <h2>Про Arena Breakout</h2>
+                <br>
+                <p>
+                    Arena Breakout — це реалістичний військовий шутер,
+                    де кожна битва може стати останньою.
+                    Збирай спорядження, виживай у небезпечних рейдах
+                    та евакуйовуйся з цінними ресурсами.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="features">
+        <h2>Особливості гри</h2>
+
+        <div class="cards">
+            <div class="card">
+                <h3>Реалістична графіка</h3>
+                <p>Сучасні ефекти та деталізовані карти.</p>
+            </div>
+
+            <div class="card">
+                <h3>Тактичні бої</h3>
+                <p>Продумуй кожен рух та використовуй тактику.</p>
+            </div>
+
+            <div class="card">
+                <h3>Великий арсенал</h3>
+                <p>Сотні видів зброї та екіпірування.</p>
+            </div>
+
+            <div class="card">
+                <h3>Онлайн битви</h3>
+                <p>Грай з друзями та перемагай суперників.</p>
+            </div>
+        </div>
+
+
+        <section id="maps">
+            <h2 style="margin-bottom:40px;">Карти гри</h2>
+
+            <div class="maps-container">
+
+                <!-- Арсенал -->
+                <div class="map-box">
+                    <img src="maps/images (5).jpg">
+
+                    <button class="accordion">Арсенал</button>
+
+                    <div class="panel">
+                        <p>
+                            Небезпечна військова база з великою кількістю
+                            броні, зброї та PvP боїв.
+                        </p>
+
+                    </div>
+                </div>
+
+                <!-- Нортрідж -->
+                <div class="map-box">
+                    <img src="maps/нортрідж.jpg">
+
+                    <button class="accordion">Нортрідж</button>
+
+                    <div class="panel">
+                        <p>
+                            Велика гірська карта з готелем,
+                            лісами та позиціями для снайперів.
+                        </p>
+
+
+                    </div>
+                </div>
+
+                <!-- Ферма -->
+                <div class="map-box">
+                    <img src="maps/images (4).jpg">
+
+                    <button class="accordion">Ферма</button>
+
+                    <div class="panel">
+                        <p>
+                            Початкова карта з відкритими полями,
+                            будинками та хорошим лутом.
+                        </p>
+
+
+                    </div>
+                </div>
+
+                <!-- Доліна -->
+                <div class="map-box">
+                    <img src="maps/3b5e93b565e90aa262f5422b0642a83e.jpg">
+
+                    <button class="accordion">Доліна</button>
+
+                    <div class="panel">
+                        <p>
+                            Карта з річками, пагорбами та селами.
+                            Ідеально підходить для тактики.
+                        </p>
+
+                    </div>
+                </div>
+
+                <!-- Телецентр -->
+                <div class="map-box">
+                    <img src="maps/телик.jpg">
+
+                    <button class="accordion">Телецентр</button>
+
+                    <div class="panel">
+                        <p>
+                            Сучасний комплекс із вузькими коридорами
+                            та інтенсивними перестрілками.
+                        </p>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </section>
+
+    <section id="contact">
+        <h2>Контакти</h2>
+        <br>
+        <p>Email: НЕтцк@gmail.com</p>
+        <p>Телефон: +380 555 762 772</p>
+    </section>
+
+    <footer>
+        <p>© 2026 Arena Breakout Fan Site</p>
+    </footer>
+
+    <script>
+        function showMessage() {
+            alert("Ласкаво просимо в Arena Breakout!");
+        }
+    </script>
+
+</body>
+
+</html>
